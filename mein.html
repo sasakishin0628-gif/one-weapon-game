@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="mein.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&display=swap" rel="stylesheet">
+<Var><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Share+Tech+Mono&display=swap" rel="stylesheet"></Var>
+</head>
+<body>
+<div id="background" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;"></div>
+<audio id="bgm" src="sounds/energy.mp3" loop autoplay></audio>
+
+
+
+    <!--戦闘(2番目表示)-->
+
+
+    <!--ステージタグ(戦闘時表示)-->
+    <h1 id="stageLabel" style="display: none;"></h1>
+
+    <div class="gameyou">
+      <p id="you"></p>
+      <p id="game"></p>
+    </div>
+
+    <!--敵表示(戦闘時表示)-->
+    <div class="teki">
+        <img id="tekiimg"  style="display: none;">
+        <p id="teki" style="display: none;"></p>
+    </div>
+
+    <!--自分表示(戦闘時表示)-->
+    <div class="zibunn">
+        <p id="zibunn" style="display: none;">HP：100</p>
+    </div>
+
+    <!--戦闘ボタン四つ(戦闘時表示)-->
+    <div class="battleWrapper">
+  <div id="battleMenu" style="display: none;">
+    <button id="kougeki">攻撃</button>
+    <button id="bakugeki">爆撃</button>
+    <button id="bougai">妨害</button>
+    <button id="kaihuku">回復</button>
+  </div>
+</div>
+
+    <!--効果音-->
+    <audio id="attackSound" src="sounds/attack.mp3"></audio>
+    <audio id="bombSound" src="sounds/bomb.wav"></audio>
+    <audio id="sealSounds" src="sounds/seals.mp3"></audio>
+    <audio id="sealSoundm" src="sounds/sealm.mp3"></audio> 
+    <audio id="healSound" src="sounds/heal.mp3"></audio>
+    <audio id="clearSound" src="sounds/clear.mp3"></audio>
+    <audio id="overSound" src="sounds/over.mp3"></audio>
+    <audio id="aidaSound" src="sounds/aida.mp3"></audio>
+
+
+    <!--テキストボックス(戦闘時表示)-->
+    <div class="textbox">
+        <p id="textbox" style="display: none;"></p>
+    </div>
+
+
+
+
+
+
+    <!--説明(1番目表示)-->
+
+    <!--説明文章(SPACEで押すことによって進む)-->
+    
+    <div class="setumeitext">
+        <p id="setumeitext"></p>
+    </div>
+
+    <!--武器ガシャ(説明文章後半から表示)-->
+    <div class="bukigasya">
+        <img id="bukigasyaimg" src="images/bukigatya.png" style="display: none;">
+        <button id="bukigasya" style="display: none;">武器ガチャを引く</button>
+    </div>
+
+    <p id="syousai">※SPACEを押して次に進みます。</p>
+    
+
+
+
+
+
+    <!--処理-->
+    <script type="text/javascript">
+
+      
+       //効果音再生関数
+       function playSound(id) {
+       const sound = document.getElementById(id);
+       if (sound) {
+       sound.currentTime = 0;
+       sound.volume = 1.0; // 🔊 最大音量に設定！
+       sound.play().catch((error) => {
+       console.error("効果音再生エラー:", error);
+     });
+   }
+ }
+        
+        //定義一覧
+
+        // モンスターの情報（どこでも使えるように最初に定義）
+        let currentMonster = null;
+        let monsterHP = 0;
+
+
+        //説明文の何行目まで表示したか
+        let setumeiLine = 0;
+
+        //ゲームの進行ステップ(説明→ガシャ→戦闘)
+        let step = 0;
+
+        //ガシャボタンが表示されたかどうか
+        let bukigasyaShown = false;
+
+        //武器が引かれたかどうか
+        let bukiDrawn = false;
+
+        //スペースキーを無効にするかどうか
+        let spaceDisabled = false;
+
+        //武器ガシャで引いた武器の情報を保存するための変数
+        let mybuki = null;
+
+        //自分のHP(100)
+        let MyHP = 100;
+
+        //今どのステージを表すかの変数
+        let currentStage = 0;
+
+        let gameOver = false;
+
+
+
+
+
+
+        //配列一覧
+
+        //説明文章
+        const setumeibunnsyou = [
+        'ようこそONE WEAPONへ',   
+        'あなたは、１個の武器を使って<br>AIモンスターを討伐していってもらいます。',
+        'ステージは、１０まであり<br>あなたのHPがなくなるまで、戦ってもらいます。',
+        '操作説明',
+        '<span style="color:#78FF94; text-shadow: 0 0 3px #78FF94, 0 0 30px #78FF94, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;">攻撃</span>&nbsp;&nbsp;&nbsp;<span style="color:#FF5F17; text-shadow: 0 0 3px #FF5F17, 0 0 30px #FF5F17, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;">爆撃</span>&nbsp;&nbsp;&nbsp;<span style="color:#C299FF; text-shadow: 0 0 3px #C299FF, 0 0 30px #C299FF, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;">妨害</span>&nbsp;&nbsp;&nbsp;<span style="color:#FFABCE; text-shadow: 0 0 3px #FFABCE, 0 0 30px #FFABCE, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;">回復</span>の４つを使って戦います。',
+        '<span style="color:#78FF94; text-shadow: 0 0 3px #78FF94, 0 0 30px #78FF94, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;">攻撃</span>：自分が引き当てた武器の攻撃力をもとに、攻撃します。',
+        '<span style="color:#FF5F17; text-shadow: 0 0 3px #FF5F17, 0 0 30px #FF5F17, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;">爆撃</span>：ランダムで、攻撃力ボーナスが付きます。<br>例：攻撃力＋ボーナス（１ステージにつき２回まで）',
+        '<span style="color:#C299FF; text-shadow: 0 0 3px #C299FF, 0 0 30px #C299FF, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;">妨害</span>：ランダムで１ターン相手を封印することができます。<br>また、封印できなかった場合は、敵が<span style="color:#FF0000; text-shadow: 0 0 3px #FF0000, 0 0 30px #FF0000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;">強い攻撃</span>をしてきます。',
+        '<span style="color:#FFABCE; text-shadow: 0 0 3px #FFABCE, 0 0 30px #FFABCE, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;">回復</span>：ランダムでHPが回復できます。<span style="color:#FF0000; text-shadow: 0 0 3px #FF0000, 0 0 30px #FF0000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;">(全ステージ３回まで)</span>',
+        'では、さっそくガチャで、武器を決めましょう。<br>もう一度スペースを押してください。'
+        ];
+
+        //武器ガシャで出てくる武器一覧
+const buki = [
+  {name:"ニューラルブレード", power: 10, img:"images/buki/NEURAL_BRADE.png"},
+  {name:"プロンプトランチャー", power: 18, img:"images/buki/PROMPT_LAUNCHER.png"},
+  {name:"データスピア", power:7, img:"images/buki/DATA_SPEAR.png"},
+  {name:"アルゴリズムハンマー", power:15, img:"images/buki/ALGORITHM_HAMMER.png"},
+  {name:"クラウドボウ", power:13, img:"images/buki/CLOUD_BOW.png"},
+  {name:"ゼロデイブレード", power:12, img:"images/buki/ZERO_DAYBLADE.png"},
+  {name:"シンギュラリスガントレット", power:21, img:"images/buki/SINGULARIS_GAUNTLET.png"},
+  {name:"エラーランス", power:13, img:"images/buki/ERROR_LANCE.png"},
+  {name:"ジャッジメントコード", power:18, img:"images/buki/JUDGEMENT_CODE.png"},
+  {name:"オラクルエッジ", power:25, img:"images/buki/ORACLE_EDGE.png"}
+];
+
+        //モンスター一覧
+        const monster = [
+        {name:"エコーボット", HP: 20, power:4 ,img:"images/monster/ECHOBOT.png"},
+        {name:"スパムクラウド", HP:25, power:8, img:"images/monster/SPAM_CLOUD.png"},
+        {name:"フェイススキャナー", HP:27, power:10, img:"images/monster/FACE_SCANNER.png"},
+        {name:"アルゴリズマ", HP:30, power:13, img:"images/monster/ALGORISMA.png"},
+        {name:"プロンプトイーター", HP:38, power:19, img:"images/monster/PROMPT_EATER.png"},
+        {name:"ジャッジロゼ", HP:40, power:20, img:"images/monster/JUDGE_ROSE.png"},
+        {name:"ミラーネット", HP:48, power:20, img:"images/monster/MIRRORNET.png"},
+        {name:"シンギュラリス", HP:50, power:28, img:"images/monster/SINGULARIS.png"},
+        {name:"オラクル・ノイズ", HP:54, power:35, img:"images/monster/ORACLE_NOISE.png"},
+        {name:"ゼロコード", HP:70, power:42, img:"images/monster/ZERO_CODE.png"}
+        ];
+
+
+        //ID要素取得
+
+        //背景
+       
+
+        //一番目
+        //説明文章
+        const setumeitextById = document.getElementById("setumeitext");
+       
+
+        //武器ガシャ画像
+        const bukigasyaimgById = document.getElementById("bukigasyaimg");
+        //武器ガシャボタン
+        const bukigasyaById = document.getElementById("bukigasya");
+
+        const syousaiById = document.getElementById("syousai");
+        
+
+        //二番目
+        //h1タグのステージ1～10表示
+        const stageLabelById = document.getElementById("stageLabel");
+        //テキストボックス
+        const textboxById = document.getElementById("textbox");
+        //ボタン
+        const battleMenuById = document.getElementById("battleMenu");
+        //敵
+        const tekiById = document.getElementById("teki");
+        //敵画像
+        const tekiimgById = document.getElementById("tekiimg");
+        //自分
+        const zibunnById = document.getElementById("zibunn");
+
+        const youById = document.getElementById("you");
+        const gameById = document.getElementById("game");
+
+
+
+
+
+
+        //背景関数
+       function showAIzyunbiBackground() {
+       const bg = document.getElementById("background");
+       bg.style.backgroundImage = "url('images/AIzyunbi.png')";
+       bg.style.backgroundSize = "cover";
+       bg.style.backgroundPosition = "center";
+       bg.style.backgroundRepeat = "no-repeat";
+       bg.style.backgroundAttachment = "fixed";
+       bg.style.display = "block";
+       }
+
+       function changeBackground() {
+       document.body.style.backgroundImage = "url('images/AI.png')";
+       document.body.style.backgroundSize = "cover";
+       document.body.style.backgroundPosition = "center";
+       document.body.style.backgroundRepeat = "no-repeat";
+       document.body.style.backgroundAttachment = "fixed";
+       }
+
+       //背景削除除
+       function hideAIzyunbiBackground() {
+       const bg = document.getElementById("background");
+       bg.style.display = "none";
+       }
+
+       function switchBGMWithFadeIn(newSrc, duration = 3000, targetVolume = 0.2) {
+       const bgm = document.getElementById("bgm");
+  bgm.pause();
+  bgm.src = newSrc;
+  bgm.load();
+  bgm.volume = 0; // 最初は無音
+  bgm.loop = true;
+  bgm.play().catch((error) => {
+    console.error("BGM再生エラー:", error);
+  });
+
+  // フェードイン処理
+  const stepTime = 100; // 0.1秒ごとに音量を上げる
+  const steps = duration / stepTime;
+  let currentStep = 0;
+
+  const fadeInterval = setInterval(() => {
+    currentStep++;
+    bgm.volume = Math.min(currentStep / steps * targetVolume, targetVolume);
+    if (currentStep >= steps) {
+      clearInterval(fadeInterval);
+    }
+  }, stepTime);
+}
+
+
+
+
+       window.addEventListener("load", function() {
+  // 最初の説明文を表示
+  setumeitextById.innerHTML = setumeibunnsyou[setumeiLine];
+  setumeiLine++;
+  step++;
+
+  // 背景を表示
+  showAIzyunbiBackground();
+});
+
+
+function updateEnemyStatus() {
+  tekiById.innerHTML = `HP：<span class="glow-blue">${monsterHP}</span>&nbsp;&nbsp;&nbsp;&nbsp;攻撃力：<span class="glow-red">${currentMonster.power}</span>`;
+}
+
+
+
+
+
+
+
+        document.addEventListener("keydown",function(e){
+
+            //スペースキーが押されたかつ、スペースキーが無効化されていないときだけ処理を実行
+            if(e.code === "Space" && !spaceDisabled){
+                 
+                //ブラウザがいつもの動作をしないようにする
+                e.preventDefault();
+
+                if (gameOver) {
+                // 🔁 ゲームオーバーから再起動処理
+                location.href = "start.html"; // ← 最初のクレジット画面に戻す
+                return;
+             }
+
+
+
+                //BGM設定
+                const bgm = document.getElementById("bgm");
+                bgm.volume = 0.6; // 音量は 0.0 ～ 1.0
+                bgm.loop = true;
+                bgm.play().catch((error) => {
+                console.error("BGM再生エラー:", error);
+              });
+             
+
+
+                syousaiById.innerHTML = `※SPACEを押して次に進みます。`;
+                
+                //説明文章一つずつ表示
+                if(setumeiLine < setumeibunnsyou.length){
+                  
+                    setumeitextById.innerHTML = setumeibunnsyou[setumeiLine];
+                    setumeiLine++;
+                    step++;
+
+                //武器ガシャの中身処理＋武器ガシャボタンを表示するタイミングを制御する処理
+                }else if(!bukigasyaShown){
+
+                    //タイミング処理
+                    
+                    syousaiById.style.display = "none";
+                    bukigasyaimgById.style.display = "block";
+                    bukigasyaById.style.display = "inline-block";
+                    bukigasyaShown = true;
+                    bukigasyaShown = true;
+                   
+                    
+                    
+
+                    //戦闘開始表示
+                }else if(bukiDrawn && step >= setumeibunnsyou.length){
+                    currentMonster = monster[currentStage];
+                    monsterHP = currentMonster.HP;
+                    hideAIzyunbiBackground(); // ← これで準備室の背景を消す
+                    changeBackground(); // ← ここで背景を表示！
+                    switchBGMWithFadeIn("sounds/MusMus-BGM-172.mp3", 3000);
+
+
+                   
+                    setumeitextById.textContent = "";
+                    bukigasyaimgById.style.display = "none";
+                    bukigasyaById.style.display = "none";
+                    syousaiById.style.display = "none";
+                    textboxById.style.display = "block";
+                    battleMenuById.style.display = "block";
+                    tekiById.style.display = "block";
+                    zibunnById.style.display = "block";
+                    
+
+                    // ステージ表示
+                    
+                    stageLabelById.style.display = "block";
+                    stageLabelById.textContent = `STAGE${currentStage + 1}`;
+
+                    // 敵表示（修正済み）
+                    zibunnById.innerHTML = `HP：<span class="glow-green">${MyHP}</span>&nbsp;&nbsp;&nbsp;&nbsp;攻撃力：<span class="glow-red">${mybuki.power}</span>`;
+                    tekiimgById.src = currentMonster.img;
+                    tekiimgById.style.display = "block";
+                    tekiById.innerHTML = `HP：<span class="glow-blue">${monsterHP}</span>&nbsp;&nbsp;&nbsp;&nbsp;攻撃力：<span class="glow-red">${currentMonster.power}</span>`;
+                    textboxById.innerHTML += `STAGE1：<span class="glow-blue">${currentMonster.name}</span>があらわれた！！さぁどうする？`;
+                    spaceDisabled = true;               
+                }
+            }
+        });
+
+
+        // ログ関数
+function addLog(message) {
+  const textbox = document.getElementById("textbox");
+  const logEntry = `<div>${message}</div>`;
+  textbox.innerHTML = logEntry + textbox.innerHTML;
+
+}
+
+
+       
+
+
+
+
+        //攻撃処理
+        document.getElementById("kougeki").addEventListener("click", function () {
+        
+          playSound("attackSound");
+
+
+        monsterHP -= mybuki.power;
+        if (monsterHP < 0) monsterHP = 0;
+  
+
+// 🔧 HP表示更新
+
+tekiById.innerHTML = `HP：<span class="glow-blue">${monsterHP}</span>&nbsp;&nbsp;&nbsp;&nbsp;攻撃力：<span class="glow-red">${currentMonster.power}</span>`;
+ 
+
+  addLog(`<span class="glow-green">自分の攻撃！</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="glow-blue">${currentMonster.name}</span>に<span class="glow-red">${mybuki.power}ダメージ！</span>&nbsp;&nbsp;&nbsp;&nbsp;相手の残りHP：<span class="glow-blue">${monsterHP}</span>`);
+
+  if (monsterHP === 0) {
+    playSound("aidaSound");
+    addLog(`<span class="glow-blue">${currentMonster.name}</span>を倒した！🌟`);
+    bakugekiCount = 0;
+    currentStage++;
+    boukaiUsed = false;
+    document.getElementById("bougai").disabled = false;
+
+    if (currentStage < monster.length) {
+      currentMonster = monster[currentStage];
+      monsterHP = currentMonster.HP;
+
+      tekiimgById.src = currentMonster.img;
+      tekiimgById.style.display = "block";
+      updateEnemyStatus();
+
+ 
+
+      stageLabelById.style.display = "block";
+      stageLabelById.textContent = `STAGE${currentStage + 1}`;
+
+                    
+     
+      
+      
+      addLog(`STAGE${currentStage + 1}：<span class="glow-blue">${currentMonster.name}</span>があらわれた！！さぁどうする？`);
+    } else {
+      playSound("clearSound");
+      addLog(`全てのモンスターを倒した！ゲームクリア！🎮🕹️`);
+      battleMenuById.style.display = "none";
+    }
+  } else {
+    if (isEnemySealed) {
+      addLog(`<span class="glow-blue">${currentMonster.name}</span>は妨害されて行動できない！`);
+      isEnemySealed = false;
+      document.getElementById("bougai").disabled = false;
+    } else {
+      MyHP -= currentMonster.power;
+      if (MyHP < 0) MyHP = 0;
+      zibunnById.innerHTML = `HP：<span class="glow-green">${MyHP}</span>&nbsp;&nbsp;&nbsp;&nbsp;攻撃力：<span class="glow-red">${mybuki.power}</span>`;
+      addLog(`<span class="glow-blue">${currentMonster.name}の攻撃！</span>&nbsp;&nbsp;&nbsp;&nbsp;あなたは<span class="glow-red">${currentMonster.power}ダメージ</span>を受けた！&nbsp;&nbsp;&nbsp;&nbsp;自分の残りHP：<span class="glow-green">${MyHP}</span>`);
+
+      if (MyHP === 0) {
+        playSound("overSound");
+        addLog(`あなたは倒れました…ゲームオーバー✖️`);
+        battleMenuById.style.display = "none";
+        tekiById.style.display = "none";
+        tekiimgById.style.display = "none";
+        zibunnById.style.display = "none";
+        youById.innerHTML = `GAMEOVER`;
+        gameById.innerHTML = `またの挑戦を待ってるよ！<br>※SPACEを押してデモ画面に戻ります。`;
+        const bgm = document.getElementById("bgm");
+        bgm.pause();
+        gameOver = true;
+        spaceDisabled = false; // SPACEキーを再び有効化
+
+
+      }
+    }
+  }
+});
+   bukigasyaById.addEventListener("click", function () {
+  const bukigasyaByIdresult = buki[Math.floor(Math.random() * buki.length)];
+
+  // 武器画像を表示
+  bukigasyaimgById.src = bukigasyaByIdresult.img;
+  bukigasyaimgById.style.display = "block";
+
+  // 武器名・攻撃力を表示
+  setumeitextById.innerHTML = `
+    あなたの武器は
+    <span style="color:#78FF94; text-shadow: 0 0 3px #78FF94, 0 0 30px #78FF94;">
+      ${bukigasyaByIdresult.name}
+    </span><br>
+    攻撃力：
+    <span style="color:#FF0000; text-shadow: 0 0 3px #FF0000, 0 0 30px #FF0000;">
+      ${bukigasyaByIdresult.power}
+    </span><br>
+    <span style="color:#A7F1FF; text-shadow: 0 0 3px #00ECFF, 0 0 30px #A7F1FF;">
+      スペースを押して戦いに行く
+    </span>
+  `;
+
+  // 武器情報を保存
+  mybuki = bukigasyaByIdresult;
+  bukiDrawn = true;
+
+  // ボタンを非表示
+  this.style.display = "none";
+
+  step++;
+});
+
+                    //ログ関数
+                 function addLog(message) {
+  const textbox = document.getElementById("textbox");
+  const logEntry = `<div>${message}</div>`;
+  textbox.innerHTML = logEntry + textbox.innerHTML;
+}   
+
+
+
+                    //爆撃パワー
+        const bakugekiWeak = [0,1,2,3];
+        const bakugekiStrong = [0,5,7,8,10];
+
+        let bakugekiCount = 0;
+        const maxBakugekiPerStage = 2;
+
+
+        //爆撃処理
+        document.getElementById("bakugeki").addEventListener("click", function () {
+          
+  if (bakugekiCount >= maxBakugekiPerStage) {
+    playSound("sealSoundm");
+    addLog(`次のステージまで、使えないよ！😥`);
+    return;
+  }
+
+  bakugekiCount++;
+
+  const bonusList = currentStage >= 5 ? bakugekiStrong : bakugekiWeak;
+  const bonus = bonusList[Math.floor(Math.random() * bonusList.length)];
+  const totalDamage = mybuki.power + bonus;
+
+  monsterHP -= totalDamage;
+  if (monsterHP < 0) monsterHP = 0;
+  playSound("bombSound");
+
+  tekiById.innerHTML = `HP：<span class="glow-blue">${monsterHP}</span>&nbsp;&nbsp;&nbsp;&nbsp;攻撃力：<span class="glow-red">${currentMonster.power}</span>`;
+
+
+
+  addLog(`<span class="glow-orange">爆撃発動！！</span>💥&nbsp;&nbsp;&nbsp;&nbsp;${mybuki.name}：攻撃力${mybuki.power}&nbsp;&nbsp;+&nbsp;&nbsp;ボーナス：${bonus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;合計：<span class="glow-red">${totalDamage}ダメージ！</span>&nbsp;&nbsp;&nbsp;&nbsp;相手の残りHP：<span class="glow-blue">${monsterHP}</span><br>(残り爆撃：${maxBakugekiPerStage - bakugekiCount}回)`);
+
+  if (monsterHP === 0) {
+    playSound("aidaSound");
+    addLog(`<span class="glow-blue">${currentMonster.name}</span>を倒した！🌟`);
+    currentStage++;
+    bakugekiCount = 0;
+    boukaiUsed = false;
+    document.getElementById("bougai").disabled = false;
+
+  
+
+    if (currentStage < monster.length) {
+      currentMonster = monster[currentStage];
+      monsterHP = currentMonster.HP;
+      updateEnemyStatus();
+
+      bakugekiCount = 0;
+
+      tekiimgById.src = currentMonster.img;
+      tekiimgById.style.display = "block";
+
+      stageLabelById.style.display = "block";
+      stageLabelById.textContent = `STAGE${currentStage + 1}`;
+       
+    } else {
+      playSound("clearSound");
+      addLog(`全てのモンスターを倒した！ゲームクリア！🎮🕹️`);
+      battleMenuById.style.display = "none";
+    }
+  } else {
+    if (isEnemySealed) {
+      addLog(`<span class="glow-blue">${currentMonster.name}</span>は妨害されて行動できない！`);
+      isEnemySealed = false;
+      document.getElementById("bougai").disabled = false;
+    } else {
+      MyHP -= currentMonster.power;
+      if (MyHP < 0) MyHP = 0;
+      zibunnById.innerHTML = `HP：<span class="glow-green">${MyHP}</span>&nbsp;&nbsp;&nbsp;&nbsp;攻撃力：<span class="glow-red">${mybuki.power}</span>`;
+      addLog(`<span class="glow-blue">${currentMonster.name}の攻撃！</span>&nbsp;&nbsp;&nbsp;&nbsp;あなたは<span class="glow-red">${currentMonster.power}ダメージ</span>を受けた！&nbsp;&nbsp;&nbsp;&nbsp;自分の残りHP：<span class="glow-green">${MyHP}</span>`);
+
+      if (MyHP === 0) {
+        playSound("overSound");
+        addLog(`あなたは倒れました…ゲームオーバー✖️`);
+        battleMenuById.style.display = "none";
+        tekiById.style.display = "none";
+        tekiimgById.style.display = "none";
+        zibunnById.style.display = "none";
+        youById.innerHTML = `GAMEOVER`;
+        gameById.innerHTML = `またの挑戦を待ってるよ！<br>※SPACEを押してデモ画面に戻ります。`;
+        const bgm = document.getElementById("bgm");
+        bgm.pause();
+        gameOver = true;
+        spaceDisabled = false; // SPACEキーを再び有効化
+
+
+      }
+    }
+  }
+});
+
+      //ログ関数
+      function addLog(message) {
+  const textbox = document.getElementById("textbox");
+  const logEntry = `<div>${message}</div>`;
+  textbox.innerHTML = logEntry + textbox.innerHTML;
+}
+
+
+
+
+        //妨害処理
+ let isEnemySealed = false;
+
+document.getElementById("bougai").addEventListener("click", function () {
+  const successRate = 0.5;
+  const isSuccess = Math.random() < successRate;
+
+  if (isSuccess) {
+    playSound("sealSounds");
+    isEnemySealed = true;
+    addLog(`<span class="glow-perple">妨害成功！！</span>😎&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#2C7CFF";>${currentMonster.name}</span>は次のターン行動不能！`);
+    document.getElementById("bougai").disabled = true;
+  } else {
+    playSound("sealSoundm");
+    addLog(`<span class="glow-perple">妨害失敗…</span>😨&nbsp;&nbsp;&nbsp;&nbsp;<span class="glow-blue">${currentMonster.name}</span>は怒って攻撃してきた！`);
+    MyHP -= currentMonster.power;
+    if (MyHP < 0) MyHP = 0;
+   zibunnById.innerHTML = `HP：<span class="glow-green">${MyHP}</span>&nbsp;&nbsp;&nbsp;&nbsp;攻撃力：<span class="glow-red">${mybuki.power}</span>`;
+    addLog(`<span class="glow-blue">${currentMonster.name}の怒りの攻撃！！😡</span>&nbsp;&nbsp;&nbsp;&nbsp;あなたは<span class="glow-red">${currentMonster.power + 8}ダメージ</span>を受けた！&nbsp;&nbsp;&nbsp;&nbsp;自分の残りHP：<span class="glow-green">${MyHP}</span>`);
+
+    if (MyHP === 0) {
+      playSound("overSound");
+      addLog(`あなたは倒れました…ゲームオーバー✖️`);
+      battleMenuById.style.display = "none";
+        tekiById.style.display = "none";
+        tekiimgById.style.display = "none";
+        zibunnById.style.display = "none";
+        youById.innerHTML = `GAMEOVER`;
+        gameById.innerHTML = `またの挑戦を待ってるよ！<br>※SPACEを押してデモ画面に戻ります。`;
+      const bgm = document.getElementById("bgm");
+      bgm.pause();
+      gameOver = true;
+      spaceDisabled = false; // SPACEキーを再び有効化
+
+
+    }
+  }
+});
+
+
+
+
+      //ログ関数
+      function addLog(message) {
+  const textbox = document.getElementById("textbox");
+  const logEntry = `<div>${message}</div>`;
+  textbox.innerHTML = logEntry + textbox.innerHTML;
+}
+
+
+
+
+
+    
+        //回復処理
+let healCount = 0;
+const maxHealPerStage = 3;
+const maxHP = 100;
+
+document.getElementById("kaihuku").addEventListener("click", function () {
+  playSound("healSound");
+  if (healCount >= maxHealPerStage) {
+    this.disabled = true;
+    return;
+  }
+
+  const healAmount = Math.floor(Math.random() * 11) + 5; // 5〜15回復
+  MyHP += healAmount;
+ 
+  healCount++;
+
+  addLog(`<span class="glow-pink">回復！！</span>💞&nbsp;&nbsp;&nbsp;&nbsp;HPが${healAmount}回復して<span class="glow-green">${MyHP}</span>になった！&nbsp;&nbsp;&nbsp;&nbsp;（残り回復：${maxHealPerStage - healCount}回）`);
+  zibunnById.innerHTML = `HP：<span class="glow-green">${MyHP}</span>&nbsp;&nbsp;&nbsp;&nbsp;攻撃力：<span class="glow-red">${mybuki.power}</span>`;
+
+  if (healCount >= maxHealPerStage) {
+    this.disabled = true;
+    addLog(`<span class=glow-pink">回復回数</span>が上限に達したよ！！❤️‍🩹`);
+  }
+});
+
+
+
+
+    </script>
+</body>
+</html>                   
