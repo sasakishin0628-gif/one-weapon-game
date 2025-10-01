@@ -13,7 +13,7 @@
 </head>
 <body>
 <div id="background" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;"></div>
-<audio id="bgm" src="ONE_WEAPON/sounds/energy.mp3" loop autoplay></audio>
+<audio id="bgm" src="sounds/energy.mp3" loop autoplay></audio>
 
 
 
@@ -50,14 +50,14 @@
 </div>
 
     <!--効果音-->
-    <audio id="attackSound" src="ONE_WEAPON/sounds/attack.mp3"></audio>
-    <audio id="bombSound" src="ONE_WEAPON/sounds/bomb.wav"></audio>
-    <audio id="sealSounds" src="ONE_WEAPON/sounds/seals.mp3"></audio>
-    <audio id="sealSoundm" src="ONE_WEAPON/sounds/sealm.mp3"></audio> 
-    <audio id="healSound" src="ONE_WEAPON/sounds/heal.mp3"></audio>
-    <audio id="clearSound" src="ONE_WEAPON/sounds/clear.mp3"></audio>
-    <audio id="overSound" src="ONE_WEAPON/sounds/over.mp3"></audio>
-    <audio id="aidaSound" src="ONE_WEAPON/sounds/aida.mp3"></audio>
+    <audio id="attackSound" src="sounds/attack.mp3"></audio>
+    <audio id="bombSound" src="sounds/bomb.wav"></audio>
+    <audio id="sealSounds" src="sounds/seals.mp3"></audio>
+    <audio id="sealSoundm" src="sounds/sealm.mp3"></audio> 
+    <audio id="healSound" src="sounds/heal.mp3"></audio>
+    <audio id="clearSound" src="sounds/clear.mp3"></audio>
+    <audio id="overSound" src="sounds/over.mp3"></audio>
+    <audio id="aidaSound" src="sounds/aida.mp3"></audio>
 
 
     <!--テキストボックス(戦闘時表示)-->
@@ -80,7 +80,7 @@
 
     <!--武器ガシャ(説明文章後半から表示)-->
     <div class="bukigasya">
-        <img id="bukigasyaimg" src="ONE_WEAPON/images/bukigatya.png" style="display: none;">
+        <img id="bukigasyaimg" src="images/bukigatya.png" style="display: none;">
         <button id="bukigasya" style="display: none;">武器ガチャを引く</button>
     </div>
 
@@ -163,30 +163,30 @@
 
         //武器ガシャで出てくる武器一覧
 const buki = [
-  {name:"ニューラルブレード", power: 10, img:"ONE_WEAPON/images/buki/NEURAL_BRADE.png"},
-  {name:"プロンプトランチャー", power: 18, img:"ONE_WEAPON/images/buki/PROMPT_LAUNCHER.png"},
-  {name:"データスピア", power:7, img:"ONE_WEAPON/images/buki/DATA_SPEAR.png"},
-  {name:"アルゴリズムハンマー", power:15, img:"ONE_WEAPON/images/buki/ALGORITHM_HAMMER.png"},
-  {name:"クラウドボウ", power:13, img:"ONE_WEAPON/images/buki/CLOUD_BOW.png"},
-  {name:"ゼロデイブレード", power:12, img:"ONE_WEAPON/images/buki/ZERO_DAYBLADE.png"},
-  {name:"シンギュラリスガントレット", power:21, img:"ONE_WEAPON/images/buki/SINGULARIS_GAUNTLET.png"},
-  {name:"エラーランス", power:13, img:"ONE_WEAPON/images/buki/ERROR_LANCE.png"},
-  {name:"ジャッジメントコード", power:18, img:"ONE_WEAPON/images/buki/JUDGEMENT_CODE.png"},
-  {name:"オラクルエッジ", power:25, img:"ONE_WEAPON/images/buki/ORACLE_EDGE.png"}
+  {name:"ニューラルブレード", power: 10, img:"images/buki/NEURAL_BRADE.png"},
+  {name:"プロンプトランチャー", power: 18, img:"images/buki/PROMPT_LAUNCHER.png"},
+  {name:"データスピア", power:7, img:"images/buki/DATA_SPEAR.png"},
+  {name:"アルゴリズムハンマー", power:15, img:"images/buki/ALGORITHM_HAMMER.png"},
+  {name:"クラウドボウ", power:13, img:"images/buki/CLOUD_BOW.png"},
+  {name:"ゼロデイブレード", power:12, img:"images/buki/ZERO_DAYBLADE.png"},
+  {name:"シンギュラリスガントレット", power:21, img:"images/buki/SINGULARIS_GAUNTLET.png"},
+  {name:"エラーランス", power:13, img:"images/buki/ERROR_LANCE.png"},
+  {name:"ジャッジメントコード", power:18, img:"images/buki/JUDGEMENT_CODE.png"},
+  {name:"オラクルエッジ", power:25, img:"images/buki/ORACLE_EDGE.png"}
 ];
 
         //モンスター一覧
         const monster = [
-        {name:"エコーボット", HP: 20, power:4 ,img:"ONE_WEAPON/images/monster/ECHOBOT.png"},
-        {name:"スパムクラウド", HP:25, power:8, img:"ONE_WEAPON/images/monster/SPAM_CLOUD.png"},
-        {name:"フェイススキャナー", HP:27, power:10, img:"ONE_WEAPON/images/monster/FACE_SCANNER.png"},
-        {name:"アルゴリズマ", HP:30, power:13, img:"ONE_WEAPON/images/monster/ALGORISMA.png"},
-        {name:"プロンプトイーター", HP:38, power:19, img:"ONE_WEAPON/images/monster/PROMPT_EATER.png"},
-        {name:"ジャッジロゼ", HP:40, power:20, img:"ONE_WEAPON/images/monster/JUDGE_ROSE.png"},
-        {name:"ミラーネット", HP:48, power:20, img:"ONE_WEAPON/images/monster/MIRRORNET.png"},
-        {name:"シンギュラリス", HP:50, power:28, img:"ONE_WEAPON/images/monster/SINGULARIS.png"},
-        {name:"オラクル・ノイズ", HP:54, power:35, img:"ONE_WEAPON/images/monster/ORACLE_NOISE.png"},
-        {name:"ゼロコード", HP:70, power:42, img:"ONE_WEAPON/images/monster/ZERO_CODE.png"}
+        {name:"エコーボット", HP: 20, power:4 ,img:"images/monster/ECHOBOT.png"},
+        {name:"スパムクラウド", HP:25, power:8, img:"images/monster/SPAM_CLOUD.png"},
+        {name:"フェイススキャナー", HP:27, power:10, img:"images/monster/FACE_SCANNER.png"},
+        {name:"アルゴリズマ", HP:30, power:13, img:"images/monster/ALGORISMA.png"},
+        {name:"プロンプトイーター", HP:38, power:19, img:"images/monster/PROMPT_EATER.png"},
+        {name:"ジャッジロゼ", HP:40, power:20, img:"images/monster/JUDGE_ROSE.png"},
+        {name:"ミラーネット", HP:48, power:20, img:"images/monster/MIRRORNET.png"},
+        {name:"シンギュラリス", HP:50, power:28, img:"images/monster/SINGULARIS.png"},
+        {name:"オラクル・ノイズ", HP:54, power:35, img:"images/monster/ORACLE_NOISE.png"},
+        {name:"ゼロコード", HP:70, power:42, img:"images/monster/ZERO_CODE.png"}
         ];
 
 
@@ -233,7 +233,7 @@ const buki = [
         //背景関数
        function showAIzyunbiBackground() {
        const bg = document.getElementById("background");
-       bg.style.backgroundImage = "url('ONE_WEAPON/images/AIzyunbi.png')";
+       bg.style.backgroundImage = "url('images/AIzyunbi.png')";
        bg.style.backgroundSize = "cover";
        bg.style.backgroundPosition = "center";
        bg.style.backgroundRepeat = "no-repeat";
@@ -242,7 +242,7 @@ const buki = [
        }
 
        function changeBackground() {
-       document.body.style.backgroundImage = "url('ONE_WEAPON/images/AI.png')";
+       document.body.style.backgroundImage = "url('images/AI.png')";
        document.body.style.backgroundSize = "cover";
        document.body.style.backgroundPosition = "center";
        document.body.style.backgroundRepeat = "no-repeat";
@@ -359,7 +359,7 @@ function updateEnemyStatus() {
                     monsterHP = currentMonster.HP;
                     hideAIzyunbiBackground(); // ← これで準備室の背景を消す
                     changeBackground(); // ← ここで背景を表示！
-                    switchBGMWithFadeIn("ONE_WEAPON/sounds/MusMus-BGM-172.mp3", 3000);
+                    switchBGMWithFadeIn("sounds/MusMus-BGM-172.mp3", 3000);
 
 
                    

@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="start.css">
+    <link rel="stylesheet" href="index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <audio id="kurezittoSound" src="sounds/kurezitto.mp3"></audio>
-<audio id="steartSound" src="sounds/steart.mp3"></audio>
+
     <!--タイトル-->
     <h1>ONE WEAPON</h1>
     
@@ -68,7 +69,6 @@
 
         //スタートボタンを押すことによって、クレジットがマイナス１される。また、クレジットが入ってない場合、スタートボタンは無効化。
         start.addEventListener("click",function(){
-            playSound("steartSound");
             if(okanecounter > 0){
                 okanecounter--;
                 credit.textContent = okanecounter;
