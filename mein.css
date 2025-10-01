@@ -1,0 +1,262 @@
+@charset "UTF-8";
+
+
+#stageLabel {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.5em;
+  color: #00faff;
+  text-shadow: 0 0 2px #00faff, 0 0 16px #00faff;
+  padding: 12px 24px;
+  border-radius: 12px;
+  display: none; /* 初期は非表示、JSで表示 */
+  margin: 20px auto;
+  text-align: center;
+  width: fit-content;
+  
+}
+
+
+.teki{
+  text-align:center;
+  font-size:20px;
+  font-family: "Mochiy Pop One", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+    display: flex;
+  flex-direction: column;
+  align-items: center; /* 横方向の中央揃え */
+  justify-content: center; /* 縦方向の中央揃え（必要なら） */
+  margin-top: 20px; /* 上に少し余白 */
+
+}
+
+.zibunn{
+  text-align:center;
+  font-size:20px;
+  font-family: "Mochiy Pop One", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.battleWrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+#battleMenu button {
+  width: 180px;
+  height: 80px;
+  margin: 10px;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.1em;
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 1px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+  box-shadow: 0 0 8px #00faff;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+#kougeki{
+  color: #78FF94;
+text-shadow: 0 0 3px #78FF94, 0 0 30px #78FF94;
+}
+
+#bakugeki{
+  color:#FF5F17;
+  text-shadow: 0 0 3px #FF5F17, 0 0 30px #FF5F17;
+
+}
+
+#bougai{
+  color:#C299FF;
+  text-shadow: 0 0 3px #C299FF, 0 0 30px #C299FF;
+
+}
+
+#kaihuku{
+color: #FFABCE;
+  text-shadow: 0 0 3px #FFABCE, 0 0 30px #FFABCE;
+
+}
+
+#battleMenu button:hover {
+  background: #00faff;
+  color: #0f0f0f;
+  box-shadow: 0 0 16px #00faff, 0 0 32px #00faff;
+  transform: scale(1.05);
+}
+
+/* 光のスキャンライン */
+#battleMenu button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.3), transparent);
+  animation: scan 2s infinite;
+}
+
+@keyframes scan {
+  0% { left: -100%; }
+  50% { left: 100%; }
+  100% { left: -100%; }
+}
+
+#textbox {
+  width: 58%;
+  height: 370px;
+  border: 3px solid white;     /* ← 枠線の色と太さを明示（元は未指定） */
+  border-radius: 5px;
+  padding: 15px;
+  background-color: #222;
+  color: white;
+  margin: 20px auto;
+
+  white-space: pre-line;
+  overflow-y: auto;            /* ← これで縦スクロール可能に！ */
+}
+
+.glow-green{
+color: #78FF94;
+text-shadow: 0 0 3px #78FF94, 0 0 30px #78FF94;
+
+}
+
+.glow-blue {
+  color: #2C7CFF;
+  text-shadow: 0 0 3px #2C7CFF, 0 0 30px #2C7CFF;
+
+}
+
+.glow-red {
+  color: #FF0000;
+  text-shadow: 0 0 3px #FF0000, 0 0 30px #FF0000;
+
+}
+
+.glow-pink {
+  color: #FFABCE;
+  text-shadow: 0 0 3px #FFABCE, 0 0 30px #FFABCE;
+
+}
+
+.glow-waterblue{
+  color:#A7F1FF;
+  text-shadow: 0 0 3px #A7F1FF, 0 0 30px #A7F1FF;
+
+}
+
+.glow-orange{
+  color:#FF5F17;
+  text-shadow: 0 0 3px #FF5F17, 0 0 30px #FF5F17;
+
+}
+
+.glow-perple{
+  color:#C299FF;
+  text-shadow: 0 0 3px #C299FF, 0 0 30px #C299FF;
+
+}
+
+#tekiimg{
+  width:150px;
+  height:210px;
+}
+
+.setumeitext{
+  text-align:center;
+ 
+}
+
+#setumeitext{
+  font-size:50px;
+  color:black;
+  text-shadow: 0 0 20px white, 0 0 40px black;
+ 
+}
+
+
+#bukigasyaimg{
+  width:300Spx;
+  height:480px;
+  
+}
+ 
+
+.bukigasya{
+    display: flex;
+  flex-direction: column;
+  align-items: center; /* 横方向の中央揃え */
+  justify-content: center; /* 縦方向の中央揃え（必要なら） */
+  margin-top: 20px; /* 上に少し余白 */
+}
+
+#bukigasya {
+  width: 200px;
+  height: 70px;
+  background: linear-gradient(135deg, #0ff 0%, #00f6ff 100%);
+  border: 2px solid #78FF94;
+  border-radius: 12px;
+  color: #000;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  text-shadow: 0 0 3px #60EEFF	, 0 0 10px #60EEFF	, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  box-shadow: 0 0 10px #60EEFF	, 0 0 30px #60EEFF	 inset;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#bukigasya:hover {
+  background: linear-gradient(135deg, #00f6ff 0%, #0ff 100%);
+  box-shadow: 0 0 20px #60EEFF	, 0 0 40px #78FF94 inset;
+  transform: scale(1.05);
+}
+
+
+#syousai{
+  position: fixed;
+  bottom: 20px; /* 画面下からの距離 */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 22px;
+ 
+}
+
+.gameyou{
+  text-align:center;
+}
+
+#you {
+  font-size: 70px;
+  color: #FF3C3C;
+  text-shadow: 0 0 10px #FF3C3C, 0 0 30px #FF3C3C;
+  font-family: 'Orbitron', sans-serif;
+  text-align: center;
+  
+}
+
+#game {
+  font-size: 25px;
+  color: #A7F1FF;
+  text-shadow: 0 0 5px #00ECFF, 0 0 20px #00ECFF;
+  font-family: 'Share Tech Mono', monospace;
+  text-align: center;
+  animation: flicker 1.5s infinite;
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
