@@ -130,43 +130,47 @@ color: #FFABCE;
 
 .glow-green{
 color: #78FF94;
-text-shadow: 0 0 3px #78FF94, 0 0 30px #78FF94;
+text-shadow: 0 0 3px black, 0 0 30px #78FF94;
 
 }
 
 .glow-blue {
   color: #2C7CFF;
-  text-shadow: 0 0 3px #2C7CFF, 0 0 30px #2C7CFF;
+  text-shadow: 0 0 3px black, 0 0 30px #2C7CFF  
 
+  
+  
 }
 
 .glow-red {
   color: #FF0000;
-  text-shadow: 0 0 3px #FF0000, 0 0 30px #FF0000;
+  text-shadow: 0 0 3px black, 0 0 30px #FF0000 
+
+;
 
 }
 
 .glow-pink {
   color: #FFABCE;
-  text-shadow: 0 0 3px #FFABCE, 0 0 30px #FFABCE;
+  text-shadow: 0 0 3px black, 0 0 30px #FFABCE;
 
 }
 
 .glow-waterblue{
   color:#A7F1FF;
-  text-shadow: 0 0 3px #A7F1FF, 0 0 30px #A7F1FF;
+  text-shadow: 0 0 3px black, 0 0 30px #A7F1FF;
 
 }
 
 .glow-orange{
   color:#FF5F17;
-  text-shadow: 0 0 3px #FF5F17, 0 0 30px #FF5F17;
+  text-shadow: 0 0 3px black, 0 0 30px #FF5F17;
 
 }
 
 .glow-perple{
   color:#C299FF;
-  text-shadow: 0 0 3px #C299FF, 0 0 30px #C299FF;
+  text-shadow: 0 0 3px black, 0 0 30px #C299FF;
 
 }
 
@@ -246,6 +250,14 @@ text-shadow: 0 0 3px #78FF94, 0 0 30px #78FF94;
   font-family: 'Orbitron', sans-serif;
   text-align: center;
   
+}
+
+#clear{
+  font-size: 70px;
+  color: #FFFF55	;
+  text-shadow: 0 0 10px #FFFF55	, 0 0 30px #FFFF55	;
+  font-family: 'Orbitron', sans-serif;
+  text-align: center;
 }
 
 #game {

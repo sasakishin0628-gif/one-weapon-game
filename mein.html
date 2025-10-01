@@ -24,6 +24,7 @@
     <h1 id="stageLabel" style="display: none;"></h1>
 
     <div class="gameyou">
+      <p id="clear"></p>
       <p id="you"></p>
       <p id="game"></p>
     </div>
@@ -224,6 +225,7 @@ const buki = [
 
         const youById = document.getElementById("you");
         const gameById = document.getElementById("game");
+        const clearById = document.getElementById("clear");
 
 
 
@@ -450,7 +452,16 @@ tekiById.innerHTML = `HP：<span class="glow-blue">${monsterHP}</span>&nbsp;&nbs
     } else {
       playSound("clearSound");
       addLog(`全てのモンスターを倒した！ゲームクリア！🎮🕹️`);
+      tekiById.style.display = "none";
+      tekiimgById.style.display = "none";
+      zibunnById.style.display = "none";
       battleMenuById.style.display = "none";
+      clearById.innerHTML = `GAMECLEAR`;
+      gameById.innerHTML = `おめでとう！！<br>※SPACEを押してデモ画面に戻ります。`;
+      const bgm = document.getElementById("bgm");
+      bgm.pause();
+      spaceDisabled = false; // SPACEキーを再び有効化
+      gameOver = true;
     }
   } else {
     if (isEnemySealed) {
@@ -582,7 +593,16 @@ tekiById.innerHTML = `HP：<span class="glow-blue">${monsterHP}</span>&nbsp;&nbs
     } else {
       playSound("clearSound");
       addLog(`全てのモンスターを倒した！ゲームクリア！🎮🕹️`);
+      tekiById.style.display = "none";
+      tekiimgById.style.display = "none";
+      zibunnById.style.display = "none";
       battleMenuById.style.display = "none";
+      clearById.innerHTML = `GAMECLEAR`;
+      gameById.innerHTML = `おめでとう！！<br>※SPACEを押してデモ画面に戻ります。`;
+      const bgm = document.getElementById("bgm");
+      bgm.pause();
+      spaceDisabled = false; // SPACEキーを再び有効化
+      gameOver = true;
     }
   } else {
     if (isEnemySealed) {
@@ -681,7 +701,7 @@ document.getElementById("bougai").addEventListener("click", function () {
     
         //回復処理
 let healCount = 0;
-const maxHealPerStage = 3;
+const maxHealPerStage = 4;
 const maxHP = 100;
 
 document.getElementById("kaihuku").addEventListener("click", function () {
@@ -691,7 +711,7 @@ document.getElementById("kaihuku").addEventListener("click", function () {
     return;
   }
 
-  const healAmount = Math.floor(Math.random() * 11) + 5; // 5〜15回復
+  const healAmount = Math.floor(Math.random() * 11) + 25; // 5〜15回復
   MyHP += healAmount;
  
   healCount++;
